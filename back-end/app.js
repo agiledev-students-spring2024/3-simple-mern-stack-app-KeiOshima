@@ -12,6 +12,7 @@ app.use(cors()) // allow cross-origin resource sharing
 app.use(express.json()) // decode JSON-formatted incoming POST data
 app.use(express.urlencoded({ extended: true })) // decode url-encoded incoming POST data
 
+app.use('/static', express.static('public'))
 // connect to database
 mongoose
   .connect(`${process.env.DB_CONNECTION_STRING}`)
@@ -21,6 +22,29 @@ mongoose
 // load the dataabase models we want to deal with
 const { Message } = require('./models/Message')
 const { User } = require('./models/User')
+
+
+
+app.get('/about', async (req , res) =>{
+  try{
+    res.json({
+      paragraph : [" Hello, my name is Kei Oshima. I am a junior at New York University majoring in computer science.",
+      "I enjoy playing table tennis in my free time with my friends. Besides table tennis, I enjoy cooking as it allows me to get a glimpse of different cultures, which is both fun and exciting."],
+      image: "http://localhost:5002/static/profile.jpg"
+    })
+
+  }
+  catch(err){
+    console.error(err)
+    res.status(400).json({
+      error: err,
+      status: 'failed to send info over',
+    })
+  }
+  
+    
+
+});
 
 // a route to handle fetching all messages
 app.get('/messages', async (req, res) => {
